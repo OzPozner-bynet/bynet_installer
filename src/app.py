@@ -27,14 +27,14 @@ def init():
 
 # Installer route - main application route 
 @app.route("/", methods=["GET"])
-def pkg_installer():
+def installer():
     """
     :return: - GET: installer web page to  select a package.
              - POST: package instalation script downloaded on client machine.
     """
     if request.method == "GET":
         packages = list_packages.get_packages()
-        return render_template('pkg_installer.html', packages=packages)
+        return render_template('installer.html', packages=packages)
 
 
 # Details form page
@@ -67,7 +67,7 @@ def details():
             # Notify about failure in details insertion
             flash("Failed to insert your values!", category="error")
         finally:
-            return redirect(url_for("pkg_installer"))
+            return redirect(url_for("installer"))
     
     if request.method == "GET":
         return render_template("details.html")

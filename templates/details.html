@@ -16,17 +16,24 @@
             <tr>
                 <td><label class="font-italic h4">Full Name</label></td>
                 <td><input type="text" name="full_name" 
-                            class="form-control"/></td>
+                            class="form-control"/></td
+                            pattern="^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$"
+                            title="Name must contain at least 2 words.">
             </tr>
             <tr>
                 <td><label class="font-italic h4">Email</label></td>
                 <td><input type="text" name="total_percentage" 
-                            class="form-control"/></td>
+                            class="form-control"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                            title="Email should be in valid format."/>
+                            </td>
             </tr>
             <tr>
                 <td><label class="font-italic h4">Phone Number</label></td>
                 <td><input type="text" name="phone_number" 
-                            class="form-control"/></td>
+                            class="form-control"
+                            pattern="^[0-9]{0,15}$"
+                            phone="Phone number should contain only numbers and less then 15 digits."/></td>
             </tr>
             <tr>
                 <td colspan="2" class="text-right">

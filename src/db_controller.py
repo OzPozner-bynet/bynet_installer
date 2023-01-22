@@ -35,7 +35,7 @@ def init_clients_table():
             company_name VARCHAR(100) NOT NULL,
             full_name VARCHAR(100) NOT NULL,
             email VARCHAR(200) NOT NULL,
-            phone_number VARCHAR(10) NOT NULL
+            phone_number VARCHAR(20) NOT NULL
         )
     """)
     db_connection.commit()
