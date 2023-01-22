@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+
+
+{% block title %} Details Form {% endblock %}
+
+{% block body %}
+<div class="container">
+    <form action="" method="POST" name="edit-form">
+        <table class="table">
+            <tr>
+                <td><label class="font-italic h4">Company Name</label></td>
+                <td><input type="text" name="company_name" 
+                            class="form-control" required/></td>
+            </tr>
+            <tr>
+                <td><label class="font-italic h4">Full Name</label></td>
+                <td><input type="text" name="full_name" 
+                            class="form-control"/></td>
+            </tr>
+            <tr>
+                <td><label class="font-italic h4">Email</label></td>
+                <td><input type="text" name="total_percentage" 
+                            class="form-control"/></td>
+            </tr>
+            <tr>
+                <td><label class="font-italic h4">Phone Number</label></td>
+                <td><input type="text" name="phone_number" 
+                            class="form-control"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-right">
+                    <input type="submit" name="Submit" value="Submit" class="btn btn-outline-danger float-left mr-3 btn-block">
+                    <input type="skip" name="Skip" value="Skip" class="btn btn-outline-danger float-right btn-block" onclick="redirection()">
+                    <script>
+                        function redirection() {
+                            window.location.href="/";
+                        }
+                    </script>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{% endblock %}

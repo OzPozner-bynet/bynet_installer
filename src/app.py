@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+
+# External modules
+from flask import Flask, render_template, request, flash, redirect, url_for
+import secrets
+
+
+# Internal modules
+import db_controller, list_packages
+
+
+# Global variables
+TEMPLATES_FOLDER = "/app/templates"
+EXPOSED_PORT = 5000
+HOST = "0.0.0.0"
+
+
+app = Flask(__name__, template_folder=TEMPLATES_FOLDER)
+app.config['SECRET_KEY'] = secrets.token_hex(16)
+
+
+# Initialize clients table if not exist before the first request
+@app.before_first_request
+def init():
+    db_controller.init_clients_table()
+
+
+# Installer route - main application route 
+@app.route("/", methods=["GET"])
+def pkg_installer():
+    """
+    :return: - GET: installer web page to  select a package.
+             - POST: package instalation script downloaded on client machine.
+    """
+    if request.method == "GET":
+        packages = list_packages.get_packages()
+        return render_template('pkg_installer.html', packages=packages)
+
+
+# Details form page
+@app.route("/details", methods=["GET", "POST"])
+def details():
+    """
+    :return: - GET: details form web page.
+             - POST: new client record has been inserted into package_installer database.
+    """
+
+    if request.method == "POST":
+        try:
+            # Retreive form data
+            company_name = request.form["company_name"]
+            full_name = request.form["full_name"]
+            email = request.form["email"]
+            phone_number = request.form["phone_number"]
+
+            print(company_name)
+
+            # Insert into packagesweb.clients table
+            db_controller.insert_client(company_name,
+                                        full_name,
+                                        email,
+                                        phone_number)
+
+            # Notify about successful change
+            flash("Your details saved successfuly!", category="success")
+        except:
+            # Notify about failure in details insertion
+            flash("Failed to insert your values!", category="error")
+        finally:
+            return redirect(url_for("pkg_installer"))
+    
+    if request.method == "GET":
+        return render_template("details.html")
+
+
+if __name__ == "__main__":
+    app.run(host=HOST, port=EXPOSED_PORT, debug=True)
