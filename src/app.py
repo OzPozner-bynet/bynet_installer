@@ -35,7 +35,7 @@ def installer():
     if request.method == "POST":
         package = request.form.get("package-select")
         package_file_key = list_packages.get_packages()[package]
-	return package_file_key
+        return package_file_key
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
