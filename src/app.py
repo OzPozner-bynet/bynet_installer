@@ -39,7 +39,7 @@ def installer():
     if request.method == "POST":
         file_key = request.form.get('packages-select')
         file_name = list_packages.get_packages()[file_key]
-	return file_name
+        return file_name
 
 
 # Details form page
