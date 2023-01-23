@@ -24,7 +24,7 @@ def init():
     rds_controller.init_clients_table()
 
 
-# Installer route - main application route 
+# Installer route - main application route
 @app.route("/", methods=["GET", "POST"])
 def installer():
     """
@@ -38,8 +38,11 @@ def installer():
 
     if request.method == "POST":
         file_key = request.form.get('packages-select')
-        file_name = list_packages.get_packages()[file_key]
-        return file_name
+        if file_key:
+            return file_key
+        else:
+            return "error"
+        #file_name = list_packages.get_packages()[file_key]
 
 
 # Details form page
@@ -81,7 +84,7 @@ def details():
 @app.route("/test", methods=["GET", "POST"])
 def test():
     if request.method == "GET":
-        packages = ["A", "B"]
+        packages = list(list_packages.get_packages().keys())
         return render_template("test.html", packages=packages)
     if request.method == "POST":
         package = request.form.get("package-select")
