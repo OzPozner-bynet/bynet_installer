@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 
 import pymysql
+from dotenv import load_dotenv
+import os
 
 
-conn = pymysql.connect(host="bynetinstallerdb-1.crpb8hkd9mij.us-east-1.rds.amazonaws.com",
-                             user="admin",
-                             password="Lilah!1234",
-                             db="packages")
+load_dotenv()
+
+
+conn = pymysql.connect(host=os.getenv('RDS_HOST'),
+                       user=os.getenv('RDS_USR'),
+                       password=os.getenv('RDS_PASSWD'),
+                       db=os.getenv('RDS_DB')
+		      )
 
 
 cur = conn.cursor()
