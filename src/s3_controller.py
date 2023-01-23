@@ -17,7 +17,7 @@ def download_file(file_name):
     :return: Downloaded <file_name> that include package installation script.
     """
 
-    Filename = "./" + str(file_name)
+    Filename = "/home/ec2-user" + str(file_name)
 
     s3.download_file(
 	Bucket=BUCKET, Key=file_name, Filename=Filename

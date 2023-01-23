@@ -24,6 +24,12 @@ def init():
     rds_controller.init_clients_table()
 
 
+# Page not found (404) handler
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("404.html")
+
+
 # Installer route - main application route
 @app.route("/", methods=["GET", "POST"])
 def installer():
@@ -35,8 +41,9 @@ def installer():
     if request.method == "POST":
         package = request.form.get("package-select")
         package_file_key = list_packages.get_packages()[package]
-        s3_controller.download_file(package_file_key)
-        return "ok"
+        try:
+	    s3_controller.download_file(package_file_key)
+	    return render_template("success.html", package=package, package_file_key=package_file_key)
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
