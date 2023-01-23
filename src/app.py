@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 import secrets
 
 # Internal modules
-import list_packages, rds_controller
+import list_packages, rds_controller, s3_controller
 
 
 # Global variables
@@ -35,7 +35,8 @@ def installer():
     if request.method == "POST":
         package = request.form.get("package-select")
         package_file_key = list_packages.get_packages()[package]
-        return package_file_key
+        s3_controller.download_file(package_file_key)
+        return "ok"
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
