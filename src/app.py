@@ -42,8 +42,10 @@ def installer():
         package = request.form.get("package-select")
         package_file_key = list_packages.get_packages()[package]
         try:
-	    s3_controller.download_file(package_file_key)
-	    return render_template("success.html", package=package, package_file_key=package_file_key)
+            s3_controller.download_file(package_file_key)
+            return render_template("success.html", package=package, package_file_key=package_file_key)
+        except:
+            return 
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
