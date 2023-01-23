@@ -32,17 +32,14 @@ def installer():
              - POST: package instalation script downloaded on client machine.
     """
 
+    if request.method == "POST":
+        package = request.form.get("package-select")
+        package_file_key = list_packages.get_packages()[package]
+	return package_file_key
+
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
-        return render_template('installer.html', packages=packages)
-
-    if request.method == "POST":
-        file_key = request.form.get('packages-select')
-        if file_key:
-            return file_key
-        else:
-            return "error"
-        #file_name = list_packages.get_packages()[file_key]
+        return render_template("installer.html", packages=packages)
 
 
 # Details form page
@@ -76,19 +73,10 @@ def details():
             flash("Failed to insert your values!", category="error")
         finally:
             return redirect(url_for("installer"))
-    
+
     if request.method == "GET":
         return render_template("details.html")
 
-
-@app.route("/test", methods=["GET", "POST"])
-def test():
-    if request.method == "GET":
-        packages = list(list_packages.get_packages().keys())
-        return render_template("test.html", packages=packages)
-    if request.method == "POST":
-        package = request.form.get("package-select")
-        return package
 
 if __name__ == "__main__":
     app.run(host=HOST, port=EXPOSED_PORT, debug=True)

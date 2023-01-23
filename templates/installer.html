@@ -11,14 +11,15 @@
         Simply browse our selection, choose the package that best suits your needs, and click the install button. 
         While the package is being installed, take a moment to relax and enjoy a cup of coffee - we'll take care of the rest.
     </p>
+    <form method="POST" class="form-group my-3">
+        <p class="text-black font-weight-bold h3 font-italic">Select your package</p>
+        <select name="package-select" class="form-control form-control-sm bg-light" id="exampleFormControlSelect1">
+            {% for package in packages %}
+            <option value="{{ package }}">{{ package }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-outline-danger mt-3" type="submit">Install</button>
+    </form>
 </div>
-<form method="POST" class="form-group my-3">
-    <p class="text-black font-weight-bold h3 font-italic">Select your package</p>
-    <select name="package-select" class="form-control form-control-sm bg-light" id="exampleForm$
-        {% for package in packages %}
-        <option value="{{ package }}">{{ package }}</option>
-        {% endfor %}
-    </select>
-    <button class="btn btn-outline-danger mt-3" type="submit">Install</button>
-</form>
 {% endblock %}
+
