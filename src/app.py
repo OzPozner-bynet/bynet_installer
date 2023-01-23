@@ -4,13 +4,12 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 import secrets
 
-
 # Internal modules
 import list_packages, rds_controller
 
 
 # Global variables
-TEMPLATES_FOLDER = "/app/templates"
+TEMPLATES_FOLDER = "../templates"
 EXPOSED_PORT = 5000
 HOST = "0.0.0.0"
 
@@ -26,15 +25,21 @@ def init():
 
 
 # Installer route - main application route 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def installer():
     """
     :return: - GET: installer web page to  select a package.
              - POST: package instalation script downloaded on client machine.
     """
+
     if request.method == "GET":
-        packages = list_packages.get_packages()
+        packages = list(list_packages.get_packages().keys())
         return render_template('installer.html', packages=packages)
+
+    if request.method == "POST":
+        file_key = request.form.get('packages-select')
+        file_name = list_packages.get_packages()[file_key]
+	return file_name
 
 
 # Details form page
@@ -72,6 +77,15 @@ def details():
     if request.method == "GET":
         return render_template("details.html")
 
+
+@app.route("/test", methods=["GET", "POST"])
+def test():
+    if request.method == "GET":
+        packages = ["A", "B"]
+        return render_template("test.html", packages=packages)
+    if request.method == "POST":
+        package = request.form.get("package-select")
+        return package
 
 if __name__ == "__main__":
     app.run(host=HOST, port=EXPOSED_PORT, debug=True)
