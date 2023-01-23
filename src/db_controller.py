@@ -8,7 +8,7 @@ load_dotenv()
 
 
 # Global variables
-MYSQL_HOST = "mysql"
+RDS_HOST = "mysql"
 MYSQL_PORT = "3306"
 
 

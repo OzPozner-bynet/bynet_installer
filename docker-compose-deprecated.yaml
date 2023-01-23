@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./src/.env
+    volumes:
+      - data:/var/lib/mysql
+      - ./src:/app/
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psecret"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+  web:
+      build: .
+      ports:
+      - "5000:5000"
+      depends_on:
+        mysql:
+          condition: service_healthy
+      restart: on-failure
+      command: sh -c 'python3 ./src/app.py'
+volumes:
+  data:

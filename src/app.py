@@ -6,7 +6,7 @@ import secrets
 
 
 # Internal modules
-import db_controller, list_packages
+import list_packages, rds_controller
 
 
 # Global variables
@@ -22,7 +22,7 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 # Initialize clients table if not exist before the first request
 @app.before_first_request
 def init():
-    db_controller.init_clients_table()
+    rds_controller.init_clients_table()
 
 
 # Installer route - main application route 
@@ -56,10 +56,10 @@ def details():
             print(company_name)
 
             # Insert into packagesweb.clients table
-            db_controller.insert_client(company_name,
-                                        full_name,
-                                        email,
-                                        phone_number)
+            rds_controller.insert_client(company_name,
+                                         full_name,
+                                         email,
+                                         phone_number)
 
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
