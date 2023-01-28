@@ -2,8 +2,7 @@
 
 # download jira
 cd /opt
-wget 
-https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.3.0-x64$
+wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-7.3.0-x64$
 
 # make it executable
 chmod a+x atlassian-jira-software-7.3.0-x64.bin
