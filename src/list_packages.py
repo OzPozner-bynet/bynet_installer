@@ -2,7 +2,7 @@
 
 def get_packages():
     packages = {
-       "Jira (Atlassian)  ******TEST******": "jira-install.sh",
+       "Jira (Atlassian)": "https://bynetawsmarketplace.s3.eu-west-1.amazonaws.com/bynet-installer/jira-install.sh",
        "Black Duck": "X",
        "BitBucket": "X",
        "Confluence (Atlassian)": "X",

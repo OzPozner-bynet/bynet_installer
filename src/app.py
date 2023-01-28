@@ -5,12 +5,13 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 import secrets
 
 # Internal modules
-import list_packages, rds_controller, s3_controller
+import list_packages, downloader
+#import rds_controller
 
 
 # Global variables
 TEMPLATES_FOLDER = "../templates"
-EXPOSED_PORT = 5000
+EXPOSED_PORT = 8081
 HOST = "0.0.0.0"
 
 
@@ -19,9 +20,9 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 
 
 # Initialize clients table if not exist before the first request
-@app.before_first_request
-def init():
-    rds_controller.init_clients_table()
+#@app.before_first_request
+#def init():
+#    rds_controller.init_clients_table()
 
 
 # Page not found (404) handler
@@ -40,8 +41,9 @@ def installer():
 
     if request.method == "POST":
         package = request.form.get("package-select")
-        package_file_key = list_packages.get_packages()[package]
-        s3_controller.download_file(package_file_key)
+        package_url = list_packages.get_packages()[package]
+        downloader.download_file(package_url)
+	package_file_key = str(package_url.split('/)[4])
         return render_template("success.html", package=package, package_file_key=package_file_key)
 
     if request.method == "GET":
@@ -65,13 +67,11 @@ def details():
             email = request.form["email"]
             phone_number = request.form["phone_number"]
 
-            print(company_name)
-
             # Insert into packagesweb.clients table
-            rds_controller.insert_client(company_name,
-                                         full_name,
-                                         email,
-                                         phone_number)
+            #rds_controller.insert_client(company_name,
+            #                             full_name,
+            #                             email,
+            #                             phone_number)
 
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
