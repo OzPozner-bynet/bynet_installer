@@ -43,7 +43,7 @@ def installer():
         package = request.form.get("package-select")
         package_url = list_packages.get_packages()[package]
         downloader.download_file(package_url)
-	package_file_key = str(package_url.split('/)[4])
+	    package_file_key = package_url.split("/")[4]
         return render_template("success.html", package=package, package_file_key=package_file_key)
 
     if request.method == "GET":
