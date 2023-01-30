@@ -62,10 +62,12 @@ def details():
     if request.method == "POST":
         try:
             # Retreive form data
+	    # TODO: Create il timestamp, snippet in boto3_test
             company_name = request.form["company_name"]
-            full_name = request.form["full_name"]
+            first_name = request.form["first_name"]
             email = request.form["email"]
             phone_number = request.form["phone_number"]
+	    # TODO: Extract the selected package
 
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
