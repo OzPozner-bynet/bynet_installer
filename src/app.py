@@ -76,7 +76,7 @@ def details():
             return redirect(url_for("installer"))
 
     if request.method == "GET":
-	    packages = list(list_packages.get_packages().keys())
+        packages = list(list_packages.get_packages().keys())
         return render_template("details.html", packages=packages)
 
 
