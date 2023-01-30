@@ -11,17 +11,23 @@
             <tr>
                 <td><label class="font-italic h4">Company Name</label></td>
                 <td><input type="text" name="company_name" 
-                            class="form-control" required
+                            class="form-control required"
                             pattern="[a-zA-Z0-9]*${1,100}"
                             title="Company name must contain only alphanumeric charachters."/></td>
             </tr>
             <tr>
-                <td><label class="font-italic h4">Full Name</label></td>
+                <td><label class="font-italic h4">First Name</label></td>
                 <td><input type="text" name="full_name" 
                             class="form-control"
-                            pattern="\w+\s\w+"
-                            title="Name must contain at least 2 words."/></td
->
+                            pattern="^[a-zA-Z]{1,100}$"
+                            title="First name must contian only alphabetic characters."/></td>
+            </tr>
+	    <tr>
+                <td><label class="font-italic h4">Last Name</label></td>
+                <td><input type="text" name="full_name"
+                            class="form-control"
+                            pattern="^[a-zA-Z]{1,100}$"
+                            title="Last name must contain only alphabetic characters."/></td>
             </tr>
             <tr>
                 <td><label class="font-italic h4">Email</label></td>
