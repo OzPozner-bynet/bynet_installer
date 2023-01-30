@@ -67,12 +67,6 @@ def details():
             email = request.form["email"]
             phone_number = request.form["phone_number"]
 
-            # Insert into packagesweb.clients table
-            #rds_controller.insert_client(company_name,
-            #                             full_name,
-            #                             email,
-            #                             phone_number)
-
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
         except:
@@ -82,7 +76,8 @@ def details():
             return redirect(url_for("installer"))
 
     if request.method == "GET":
-        return render_template("details.html")
+	packages = list(list_packages.get_packages().keys())
+        return render_template("details.html", packages=packages)
 
 
 if __name__ == "__main__":
