@@ -17,14 +17,14 @@
             </tr>
             <tr>
                 <td><label class="font-italic h4">First Name</label></td>
-                <td><input type="text" name="full_name" 
+                <td><input type="text" name="first_name" 
                             class="form-control"
                             pattern="^[a-zA-Z]{1,100}$"
                             title="First name must contian only alphabetic characters."/></td>
             </tr>
 	    <tr>
                 <td><label class="font-italic h4">Last Name</label></td>
-                <td><input type="text" name="full_name"
+                <td><input type="text" name="last_name"
                             class="form-control"
                             pattern="^[a-zA-Z]{1,100}$"
                             title="Last name must contain only alphabetic characters."/></td>
@@ -45,7 +45,7 @@
                             phone="Phone number should contain only numbers and less then 15 digits."/></td>
             </tr>
             <tr>
-                <td><label class="font-italic h4">Packages</label></td>
+                <td><label class="font-italic h4">Package</label></td>
                 <td><select name="package-select" class="form-control form-control-sm bg-light" id="exampleFormControlSelect1">
                     {% for package in packages %}
                     <option value="{{ package }}">{{ package }}</option>
