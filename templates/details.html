@@ -45,6 +45,14 @@
                             phone="Phone number should contain only numbers and less then 15 digits."/></td>
             </tr>
             <tr>
+                <td><label class="font-italic h4">Packages</label></td>
+                <td><select name="package-select" class="form-control form-control-sm bg-light" id="exampleFormControlSelect1">
+                    {% for package in packages %}
+                    <option value="{{ package }}">{{ package }}</option>
+                    {% endfor %}
+                </select></td>
+            </tr>
+            <tr>
                 <td colspan="2" class="text-right">
                     <input type="submit" name="Submit" value="Submit" class="btn btn-outline-danger float-left mr-3 btn-block">
                     <input type="skip" name="Skip" value="Skip" class="btn btn-outline-danger float-right btn-block" onclick="redirection()">
