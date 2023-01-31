@@ -2,7 +2,7 @@
 
 # External modules
 from flask import Flask, render_template, request, flash, redirect, url_for
-import secrets
+import secrets, datetime, pytz
 
 # Internal modules
 import list_packages, downloader
@@ -15,14 +15,13 @@ EXPOSED_PORT = 8081
 HOST = "0.0.0.0"
 
 
+# Time zone configuration
+tz = pytz.timezone("Asia/Jerusalem")
+
+
+# App config
 app = Flask(__name__, template_folder=TEMPLATES_FOLDER)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-
-
-# Initialize clients table if not exist before the first request
-#@app.before_first_request
-#def init():
-#    rds_controller.init_clients_table()
 
 
 # Page not found (404) handler
@@ -62,12 +61,13 @@ def details():
     if request.method == "POST":
         try:
             # Retreive form data
-	    # TODO: Create il timestamp, snippet in boto3_test
+	    timestamp = datetime.datetime.now(tz)
             company_name = request.form["company_name"]
             first_name = request.form["first_name"]
+	    last_name = request.form["last_name"]
             email = request.form["email"]
             phone_number = request.form["phone_number"]
-	    # TODO: Extract the selected package
+	    package = request.form["package-select"]
 
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
@@ -75,7 +75,16 @@ def details():
             # Notify about failure in details insertion
             flash("Failed to insert your values!", category="error")
         finally:
-            return redirect(url_for("installer"))
+            #return redirect(url_for("installer"))
+	    return {
+	            "timestamp": timestamp,
+		    "company_name": company_name,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "email": email,
+                    "phone_number": phone_number,
+                    "package": package
+                   }
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
