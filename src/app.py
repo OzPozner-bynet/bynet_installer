@@ -61,13 +61,13 @@ def details():
     if request.method == "POST":
         try:
             # Retreive form data
-	        timestamp = datetime.datetime.now(tz)
+            timestamp = datetime.datetime.now(tz)
             company_name = request.form["company_name"]
             first_name = request.form["first_name"]
-	        last_name = request.form["last_name"]
+            last_name = request.form["last_name"]
             email = request.form["email"]
             phone_number = request.form["phone_number"]
-	    package = request.form["package-select"]
+            package = request.form["package-select"]
 
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
@@ -76,15 +76,7 @@ def details():
             flash("Failed to insert your values!", category="error")
         finally:
             #return redirect(url_for("installer"))
-	    return {
-	            "timestamp": timestamp,
-		        "company_name": company_name,
-                "first_name": first_name,
-                "last_name": last_name,
-                "email": email,
-                "phone_number": phone_number,
-                "package": package
-                }
+	    return {"timestamp": timestamp, "company_name": company_name, "first_name": first_name, "last_name": last_name, "email": email, "phone_number": phone_number, "package": package}
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
