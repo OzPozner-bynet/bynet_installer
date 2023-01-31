@@ -69,14 +69,19 @@ def details():
             phone_number = request.form["phone_number"]
             package = request.form["package-select"]
 
+            # Send a POST request to Bynet CRM
+	    url = "https://bynetdev.service-now.com/api/bdml/aws_api/new_lic"
+	    headers = {"Content-Type": "application/json"}
+            record = {"timestamp": timestamp, "company_name": company_name, "first_name": first_name, "last_name": last_name, "email": email, "phone_number": phone_number, "package": package}
+            response = requests.post(url, headers=headers, json=record)
+
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
         except:
             # Notify about failure in details insertion
             flash("Failed to insert your values!", category="error")
         finally:
-            #return redirect(url_for("installer"))
-	        return {"timestamp": timestamp, "company_name": company_name, "first_name": first_name, "last_name": last_name, "email": email, "phone_number": phone_number, "package": package}
+            return redirect(url_for("installer"))
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
