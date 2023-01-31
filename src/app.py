@@ -61,10 +61,10 @@ def details():
     if request.method == "POST":
         try:
             # Retreive form data
-	    timestamp = datetime.datetime.now(tz)
+	        timestamp = datetime.datetime.now(tz)
             company_name = request.form["company_name"]
             first_name = request.form["first_name"]
-	    last_name = request.form["last_name"]
+	        last_name = request.form["last_name"]
             email = request.form["email"]
             phone_number = request.form["phone_number"]
 	    package = request.form["package-select"]
