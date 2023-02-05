@@ -2,11 +2,10 @@
 
 # External modules
 from flask import Flask, render_template, request, flash, redirect, url_for
-import secrets, datetime, pytz
+import secrets, datetime, pytz, requests
 
 # Internal modules
 import list_packages, downloader
-#import rds_controller
 
 
 # Global variables
@@ -70,26 +69,27 @@ def details():
             package = request.form["package-select"]
 
             # Send a POST request to Bynet CRM
-            url = "https://bynetdev.service-now.com/api/bdml/aws_api/new_lic"
-            headers = {"Content-Type": "application/json"}
+            url = "https://idanby@bynet.co.il:zqKbi2cv@bynetdev.service-now.com/api/bdml/aws_api/new_lic"
+            headers = {"Content-Type": "application/json", "Accept": "application/json"}
             record = {
-               "timestamp": timestamp,
-               "company_name": company_name,
-               "first_name": first_name, 
-               "last_name": last_name,
-               "email": email,
-               "phone_number": phone_number,
-               "package": package
+               "timestamp": str(timestamp),
+               "company_name": str(company_name),
+               "first_name": str(first_name),
+               "last_name": str(last_name),
+               "email": str(email),
+               "phone_number": str(phone_number),
+               "_package_name": str(package)
             }
             response = requests.post(url, headers=headers, json=record)
 
             # Notify about successful change
             flash("Your details saved successfuly!", category="success")
-        except:
+        except Exception as e:
             # Notify about failure in details insertion
             flash("Failed to insert your values!", category="error")
         finally:
             return redirect(url_for("installer"))
+
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
