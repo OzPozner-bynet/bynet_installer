@@ -2,7 +2,7 @@
 
 # External modules
 from flask import Flask, render_template, request, flash, redirect, url_for
-import secrets, datetime, pytz, requests
+import secrets, datetime, pytz, requests, logging
 
 # Internal modules
 import list_packages, downloader
@@ -22,6 +22,15 @@ tz = pytz.timezone("Asia/Jerusalem")
 app = Flask(__name__, template_folder=TEMPLATES_FOLDER)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 
+logging.basicConfig(level=logging.DEBUG)
+def create_log(data, logType):
+    ts = datetime.datetime.now()
+    if logType == "ERROR":
+        app.logger.error(" |{}| {}".format(ts, data))
+    elif logType == "WARN":
+        app.logger.warning(" |{}| {}".format(ts, data))
+    elif logType == "INFO":
+        app.logger.info(" |{}| {}".format(ts, data))
 
 # Page not found (404) handler
 @app.errorhandler(404)
@@ -85,6 +94,8 @@ def details():
                 "_package_name": str(package),
                 "ec2_instance_id": str(ec2_instance_id)
             }
+
+            create_log(record, "INFO")
             response = requests.post(url, headers=headers, json=record)
 
             # Notify about successful change
