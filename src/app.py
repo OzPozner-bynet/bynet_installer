@@ -68,17 +68,22 @@ def details():
             phone_number = request.form["phone_number"]
             package = request.form["package-select"]
 
+            # Retreive EC2 instance ID
+            token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
+            ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
+
             # Send a POST request to Bynet CRM
             url = "https://idanby@bynet.co.il:zqKbi2cv@bynetdev.service-now.com/api/bdml/aws_api/new_lic"
             headers = {"Content-Type": "application/json", "Accept": "application/json"}
             record = {
-               "timestamp": str(timestamp),
-               "company_name": str(company_name),
-               "first_name": str(first_name),
-               "last_name": str(last_name),
-               "email": str(email),
-               "phone_number": str(phone_number),
-               "_package_name": str(package)
+                "timestamp": str(timestamp),
+                "company_name": str(company_name),
+                "first_name": str(first_name),
+                "last_name": str(last_name),
+                "email": str(email),
+                "phone_number": str(phone_number),
+                "_package_name": str(package),
+                "ec2_instance_id": str(ec2_instance_id)
             }
             response = requests.post(url, headers=headers, json=record)
 
