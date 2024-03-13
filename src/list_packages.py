@@ -2,9 +2,11 @@
 import json
 import requests
 import os
+import dotenv 
 from dotenv import load_dotenv
 
 def get_packages():
+  load_dotenv()
   api_key = os.getenv("API_KEY")
   aws_account_id = os.getenv("AWS_ACCOUNT_ID")
   snow_url = os.getenv("SNOW_URL")
@@ -26,7 +28,7 @@ def get_packages():
   else:
     print("Error:", response.status_code)
     packages = {
-       "Can't find packages for Account ID "+aws_account_id + " please request private offer": "x",
+       f"Can't find packages for Account ID: {aws_account_id if aws_account_id else "unknown account id "} please request private offer": "x",
     }
   return packages
 
