@@ -24,7 +24,7 @@ def get_packages():
     if response.status_code == 200:
       # Parse JSON response
       data = json.loads(response.text)
-      print(data)
+      #print(data)
       packages = data
     else:
       print("Error:", response.status_code)
