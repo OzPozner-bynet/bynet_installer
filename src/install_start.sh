@@ -12,18 +12,22 @@ else
     echo "Stopped - restarting"
     directory_path="/opt/bynet_installer/src"
     if [ -d "$directory_path" ]; then
-      python $directory_path/app.py
+      echo "running from $directory_path"
+      python $directory_path/app.py &
       exit 0
     fi   
     directory_path="~/bynet_installer/src"
     if [ -d "$directory_path" ]; then
-      python $directory_path/app.py
+      echo "running from $directory_path"
+      python $directory_path/app.py &
       exit 0
     fi
     directory_path="~/bynet_installer/bynet_installer/src"
     if [ -d "$directory_path" ]; then
-      python $directory_path/app.py
+      echo "running from $directory_path"
+      python $directory_path/app.py &
       exit 0
     fi
 fi
+echo "didn't find app.py"
 exit 1
