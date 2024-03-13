@@ -28,7 +28,7 @@ def get_packages():
   else:
     print("Error:", response.status_code)
     packages = {
-       f"Can't find packages for Account ID: {aws_account_id if aws_account_id else "unknown account id "} please request private offer": "x",
+       f"Can't find packages for Account ID: {aws_account_id if aws_account_id else 'unknown account id '} please request private offer": "x",
     }
   return packages
 
