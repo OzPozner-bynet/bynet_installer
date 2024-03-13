@@ -23,7 +23,7 @@ if "EC2_INSTANCE_ID" not in dotenv_values():
     env_file.write("EC2_INSTANCE_ID="+ec2_instance_id+"\n")
 
 # Now you can access environment variables using os.getenv()
-aws_account_id = os.getenv("aws_account_id")
+aws_account_id = os.getenv("AWS_ACCOUNT_ID")
 print(f"AWS Account ID (from .env): {aws_account_id}")
 ec2_instance_id = os.getenv("EC2_INSTANCE_ID")
 print(f"AWS Instance ID (from .env): {ec2_instance_id}")
