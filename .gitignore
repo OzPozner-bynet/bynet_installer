@@ -2,5 +2,5 @@ Dockerfile
 README.md
 docker-compose.yaml
 /src/__pycache__
-/src/.env
+#/src/.env
 rsa_id

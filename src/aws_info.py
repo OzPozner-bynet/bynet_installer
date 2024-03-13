@@ -1,4 +1,4 @@
-import os, requests, boto3
+import os, requests, boto3, dotenv
 # get data from aws meta-deta
 token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
 ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
@@ -6,6 +6,8 @@ aws_account_id = requests.get("http://169.254.169.254/latest/dynamic/instance-id
 print("adding/updating in .env")
 print("ec2_instance_id="+ec2_instance_id)
 print("aws_account_id="+aws_account_id )
+account_id = aws_account_id["accountId"]
+mpProductCodes = aws_account_id["marketplaceProductCodes"]
 from dotenv import load_dotenv, dotenv_values
 # Load environment variables from the `.env` file
 load_dotenv()
@@ -13,7 +15,7 @@ load_dotenv()
 if "aws_account_id" not in dotenv_values():
   # Key not found, add it with a placeholder value (replace with your desired default)
   with open(".env", "a") as env_file:
-    env_file.write("aws_account_id="+aws_account_id+"\n")
+    env_file.write("aws_account_id="+account_id+"\n")
 if "ec2_instance_id" not in dotenv_values():
   # Key not found, add it with a placeholder value (replace with your desired default)
   with open(".env", "a") as env_file:
