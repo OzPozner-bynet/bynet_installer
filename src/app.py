@@ -82,7 +82,7 @@ def details():
             ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
 
             # Send a POST request to Bynet CRM
-            url = "https://idanby@bynet.co.il:zqKbi2cv@bynetdev.service-now.com/api/bdml/aws_api/new_lic"
+            url = "https://bynetprod.service-now.com/api/bdml/aws_api/new_lic"
             headers = {"Content-Type": "application/json", "Accept": "application/json"}
             record = {
                 "timestamp": str(timestamp),

@@ -13,7 +13,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         # Install boto3
         pip3 install boto3
         export cloud_provider="AWS"
-        echo 'export cloud_provider="AWS"'>>~/.bashrc
+        echo 'export cloud_provider="AWS"'>>~.bashrc
     else
         echo "Unknown cloud provider"
         export cloud_provider="unknown"
