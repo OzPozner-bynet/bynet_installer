@@ -1,0 +1,7 @@
+[Unit]
+Description=Bynet Installer
+After=network.target
+[Service]
+ExecStart=/opt/bynet_installer/install_start.sh
+[Install]
+WantedBy=default.target
