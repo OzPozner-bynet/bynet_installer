@@ -7,7 +7,23 @@
 if pgrep -x "app.py" > /dev/null
 then
     echo "Running"
+    exit 0
 else
     echo "Stopped - restarting"
-    python /opt/bynet_installer/src/app.py 
+    directory_path="/opt/bynet_installer/src"
+    if [ -d "$directory_path" ]; then
+      python $directory_path/app.py
+      exit 0
+    fi   
+    directory_path="~/bynet_installer/src"
+    if [ -d "$directory_path" ]; then
+      python $directory_path/app.py
+      exit 0
+    fi
+    directory_path="~/bynet_installer/bynet_installer/src"
+    if [ -d "$directory_path" ]; then
+      python $directory_path/app.py
+      exit 0
+    fi
 fi
+exit 1
