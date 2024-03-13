@@ -1,6 +1,6 @@
 #!/bin/bash
 cd /opt
-git clone https://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@github.com/OzPozner-bynet/bynet_installer.git
+sudo git clone https://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@github.com/OzPozner-bynet/bynet_installer.git
 cd /opt/bynet_installer
 sudo chmod a+x /opt/bynet_installer/which_cloud.sh
 sudo /opt/bynet_installer/which_cloud/which_cloud.sh
