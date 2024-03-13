@@ -10,7 +10,7 @@ import list_packages, downloader
 
 # Global variables
 TEMPLATES_FOLDER = "../templates"
-EXPOSED_PORT = 80
+EXPOSED_PORT = 8080
 HOST = "0.0.0.0"
 
 
