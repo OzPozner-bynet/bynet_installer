@@ -25,7 +25,7 @@ def get_packages():
       # Parse JSON response
       data = json.loads(response.text)
       #print(data)
-      packages = data
+      packages = data['result']
     else:
       print("Error:", response.status_code)
       print("Error Message: ", response.text)
