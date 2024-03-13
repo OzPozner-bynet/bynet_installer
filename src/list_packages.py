@@ -1,36 +1,33 @@
 #!/usr/bin/env python3
+import json
+import requests
+import os
+from dotenv import load_dotenv
 
 def get_packages():
-    packages = {
-       "Jira (Atlassian)": "https://bynetawsmarketplace.s3.eu-west-1.amazonaws.com/bynet-installer/jira-install.sh",
-       "Black Duck": "X",
-       "BitBucket": "X",
-       "Confluence (Atlassian)": "X",
-       "Visual Studio": "X",
-       "GitLab (Entry Edition)": "X",
-       "GitLab (Ultimate)": "X",
-       "GitLab (Premium)": "X",
-       "Splunk (Security Solutions)": "X",
-       "Splunk (Observability)": "X",
-       "Splunk (Cloud Platform)": "X",
-       "Splunk (Enterprise)": "X",
-       "IBM-CP4I": "X",
-       "CISCO APPD": "X",
-       "Jfrog (Entry Edition)": "X",
-       "Jfrog (Enterprise)": "X",
-       "Stratos": "X",
-       "Trilio": "X",
-       "Redis (Entry Edition)": "X",
-       "Redis (Fix)": "X",
-       "Redis (Flexible)": "X",
-       "Redis (Annual)": "X",
-       "(PowerBI)": "X",
-       "IBM-CP4D": "X",
-       "Tanzu": "X",
-       "IBM Open Source Platform Support": "X",
-       "Devops Application Support": "X",
-       "Video Content Management System Support": "X"
-    }
+  api_key = os.getenv("API_KEY")
+  aws_account_id = os.getenv("AWS_ACCOUNT_ID")
+  snow_url = os.getenv("SNOW_URL")
+  url = snow_url+"get_packages"
 
-    return packages
+  # Set headers with your API key
+  headers = {"x-api-key": api_key, "Accept" : "application/json"}
+  # Set parameters
+  params = {"aws_account_id": aws_account_id}
+
+  # Send GET request with headers and parameters
+  response = requests.get(url, headers=headers, params=params)
+
+  # Check for successful response
+  if response.status_code == 200:
+    # Parse JSON response
+    data = json.loads(response.text)
+    #print(data)
+    packages = data
+  else:
+    print("Error:", response.status_code)
+    packages = {
+       "Can't find packages for Account ID "+aws_account_id + " please request private offer": "x",
+    }
+  return packages
 
