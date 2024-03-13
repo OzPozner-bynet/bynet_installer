@@ -13,7 +13,7 @@ def get_packages():
     snow_url = os.getenv("SNOW_URL")
     url = f"{snow_url if snow_url else 'https://bynetprod.service-now.com/api/x_bdml_nimbus/v1/nimbus_api/'}get_packages"
     # Set headers with your API key
-    headers = {"x-api-key": api_key, "Accept" : "application/json"}
+    headers = {"x_api_key": api_key, "Accept" : "application/json"}
     # Set parameters
     params = {"aws_account_id": aws_account_id}
 
