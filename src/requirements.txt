@@ -3,4 +3,4 @@ python-dotenv==0.21.1
 PyMySQL==1.0.2
 pytz==2022.7.1
 requests==2.28.2
-logging==0.4.9.6
+#logging==0.4.9.6
