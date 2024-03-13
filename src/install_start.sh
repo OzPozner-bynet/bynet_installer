@@ -22,7 +22,7 @@ else
       python $directory_path/app.py &
       exit 0
     fi
-    directory_path="~/bynet_installer/bynet_installer/src"
+    directory_path="/home/cloudshell-user/bynet-installer/bynet_installer/src"
     if [ -d "$directory_path" ]; then
       echo "running from $directory_path"
       python $directory_path/app.py &
