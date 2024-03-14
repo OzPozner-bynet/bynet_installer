@@ -12,7 +12,7 @@ pip3 install -r /opt/bynet_installer/src/requirements.txt
 sudo chmod a+rw /opt/bynet_installer/src/.env
 sudo chmod a+x /opt/bynet_installer/src/which_cloud.sh
 /opt/bynet_installer/src/which_cloud.sh
-python /opt/bynet_installer/src/aws_info.py
+sudo python /opt/bynet_installer/src/aws_info.py
 sudo chmod a+x /opt/bynet_installer/src/install_start.sh
 #on start run script using rc.local
 if [  -f /etc/rc.d/rc.local ]; then
@@ -20,9 +20,18 @@ if [  -f /etc/rc.d/rc.local ]; then
   sh /opt/bynet_installer/src/install_start.sh
 else  
 #on start run script using systemd
-  sudo cp /opt/bynet_installer/src/bynet_installer.service /etc/systemd/system/
-  sudo systemctl daemon-reload
-  sudo systemctl enable bynet_installer.service
-  sudo systemctl start bynet_installer.service
+  if [ -d /run/systemd/system  ]; then
+    echo "install reboot using systemd"
+    sudo cp /opt/bynet_installer/src/bynet_installer.service /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl enable bynet_installer.service
+    sudo systemctl start bynet_installer.service
+  else
+    echo "installing reboot using crontab"
+    sudo yum install cronie -y
+    NEW_CRON_LINE="@reboot * * * * /opt/bynet_installer/src/install_start.sh"
+    echo "$NEW_CRON_LINE" | crontab -l | cat - | crontab -
+  fi  
 fi
+sudo pkill python
 /opt/bynet_installer/src/install_start.sh
