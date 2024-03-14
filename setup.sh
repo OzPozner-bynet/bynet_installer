@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo yum update -y
 sudo yum install python3 pip3 -y
-sudo pip install virtualenv  
+sudo pip install virtualenv 
 virtualenv /opt/bynet_installer
 source /opt/bynet_installer/bin/activate
 cd /opt
