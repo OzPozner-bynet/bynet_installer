@@ -11,7 +11,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     elif grep -q "Amazon" /sys/class/dmi/id/sys_vendor; then
         echo "Running on Amazon Web Services (AWS)"
         # Install boto3
-        pip3 install boto3
+        #pip3 install boto3 dotenv
         export cloud_provider="AWS"
         echo 'export cloud_provider="AWS"'>>~.bashrc
     else
