@@ -1,4 +1,4 @@
-import os, requests, boto3, dotenv, json
+import os, requests, json
 # get data from aws meta-deta
 token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
 ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
