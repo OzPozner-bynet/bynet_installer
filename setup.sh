@@ -10,4 +10,4 @@ sudo chmod a+x /opt/bynet_installer/src/install_start.sh
 sudo cp /opt/bynet_installer/src/bynet_installer.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable bynet_installer.service
-sudo systemctl start bynet_installer.service
+#sudo systemctl start bynet_installer.service

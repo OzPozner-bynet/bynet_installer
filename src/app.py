@@ -3,6 +3,8 @@
 # External modules
 from flask import Flask, render_template, request, flash, redirect, url_for
 import secrets, datetime, pytz, requests, logging
+import dotenv, os, json 
+from dotenv import load_dotenv, dotenv_values
 
 # Internal modules
 import list_packages, downloader
@@ -78,12 +80,29 @@ def details():
             package = request.form["package-select"]
 
             # Retreive EC2 instance ID
-            token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
-            ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
+            load_dotenv()
+          
 
-            # Send a POST request to Bynet CRM
-            url = "https://bynetprod.service-now.com/api/bdml/aws_api/new_lic"
-            headers = {"Content-Type": "application/json", "Accept": "application/json"}
+            if "EC2_INSTANCE_ID" not in dotenv_values():
+                token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
+                ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
+            else:
+                ec2_instance_id = os.getenv("EC2_INSTANCE_ID")
+                print(f"AWS Instance ID (from .env): {ec2_instance_id}")
+            if "EC2_INSTANCE_ID" not in dotenv_values():
+                token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
+                ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
+                inJSONtext= requests.get("http://169.254.169.254/latest/dynamic/instance-identity/document", headers={"X-aws-ec2-metadata-token": token}).text
+                inJSON = json.loads(inJSONtext)
+                aws_account_id = inJSON["accountId"]
+            else:
+                aws_account_id = os.getenv("AWS_ACCOUNT_ID")
+                print(f"AWS Account ID (from .env): {aws_account_id}")
+
+            # Send a POST request to Bynet ServiceNow
+            api_key = os.getenv("API_KEY")    
+            url = "https://bynetprod.service-now.com/api/x_bdml_nimbus/v1/nimbus_api/new_lic"
+            headers = {"Content-Type": "application/json", "Accept": "application/json", "x_api_key": api_key, "Accept" : "application/json"}
             record = {
                 "timestamp": str(timestamp),
                 "company_name": str(company_name),
@@ -92,14 +111,15 @@ def details():
                 "email": str(email),
                 "phone_number": str(phone_number),
                 "_package_name": str(package),
-                "ec2_instance_id": str(ec2_instance_id)
+                "aws_account_id": str(aws_account_id),
+                "instance_id": str(ec2_instance_id)
             }
 
             create_log(record, "INFO")
-            response = requests.post(url, headers=headers, json=record)
-
+            response = requests.post(url, headers=headers, json=record).text
+            licInJSON = json.loads(response)
             # Notify about successful change
-            flash("Your details saved successfuly!", category="success")
+            flash("Your details saved successfuly!"+response, category="success")
         except Exception as e:
             # Notify about failure in details insertion
             flash("Failed to insert your values!", category="error")
@@ -113,4 +133,9 @@ def details():
 
 
 if __name__ == "__main__":
-    app.run(host=HOST, port=EXPOSED_PORT, debug=True)
+    
+    if "BYNET_INSTALLER_DEBUG" not in dotenv_values():
+        debugFlask = True
+    else:
+        debugFlask = os.getenv("BYNET_INSTALLER_DEBUG")    
+    app.run(host=HOST, port=EXPOSED_PORT, debug=debugFlask)
