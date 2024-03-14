@@ -99,7 +99,7 @@ def details():
                 aws_account_id = os.getenv("AWS_ACCOUNT_ID")
                 print(f"AWS Account ID (from .env): {aws_account_id}")
 
-            # Send a POST request to Bynet ServiceNow
+            # Send a POST request to Bynet 
             api_key = os.getenv("API_KEY")    
             url = "https://bynetprod.service-now.com/api/x_bdml_nimbus/v1/nimbus_api/new_lic"
             headers = {"Content-Type": "application/json", "Accept": "application/json", "x_api_key": api_key, "Accept" : "application/json"}
