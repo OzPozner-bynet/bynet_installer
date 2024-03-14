@@ -29,8 +29,8 @@ else
   else
     echo "installing reboot using crontab"
     sudo yum install cronie -y
-    NEW_CRON_LINE="@reboot * * * * /opt/bynet_installer/src/install_start.sh"
-    echo "$NEW_CRON_LINE" | crontab -l | cat - | crontab -
+    NEW_CRON_LINE="@reboot /opt/bynet_installer/src/install_start.sh"
+    echo "$NEW_CRON_LINE" | crontab -l | cat - | sudo crontab -
   fi  
 fi
 sudo pkill python
