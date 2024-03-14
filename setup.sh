@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo yum update -y
 sudo yum install python3 pip3 -y
-sudo pip3 install virtualenv  
+sudo pip install virtualenv  
 virtualenv /opt/bynet_installer
 source /opt/bynet_installer/bin/activate
 cd /opt
@@ -13,7 +13,7 @@ pip3 install -r /opt/bynet_installer/src/requirements.txt
 python /opt/bynet_installer/src/aws_info.py
 sudo chmod a+x /opt/bynet_installer/src/install_start.sh
 #on start run script using rc.local
-if [-f /etc/rc.d/rc.local ]; then
+if [  -f /etc/rc.d/rc.local ]; then
   sudo chmod +x /etc/rc.d/rc.local
   sh /opt/bynet_installer/src/install_start.sh
 else  
