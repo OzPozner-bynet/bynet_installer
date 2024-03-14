@@ -1,6 +1,7 @@
 #!/bin/bash
 sudo yum update -y
-sudo yum install python3 pip3 -y 
+sudo yum install python3 pip3 -y
+sudo pip3 install virtualenv  
 virtualenv /opt/bynet_installer
 source /opt/bynet_installer/bin/activate
 cd /opt
@@ -11,11 +12,14 @@ sudo chmod a+x /opt/bynet_installer/src/which_cloud.sh
 pip3 install -r /opt/bynet_installer/src/requirements.txt
 python /opt/bynet_installer/src/aws_info.py
 sudo chmod a+x /opt/bynet_installer/src/install_start.sh
-#on start run script usinf rc.local
-sudo chmod +x /etc/rc.d/rc.local
-sh /opt/bynet_installer/src/install_start.sh
+#on start run script using rc.local
+if [-f /etc/rc.d/rc.local ]; then
+  sudo chmod +x /etc/rc.d/rc.local
+  sh /opt/bynet_installer/src/install_start.sh
+else  
 #on start run script using systemd
-#sudo cp /opt/bynet_installer/src/bynet_installer.service /etc/systemd/system/
-#sudo systemctl daemon-reload
-#sudo systemctl enable bynet_installer.service
-#sudo systemctl start bynet_installer.service
+  sudo cp /opt/bynet_installer/src/bynet_installer.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable bynet_installer.service
+  sudo systemctl start bynet_installer.service
+fi
