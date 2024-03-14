@@ -9,6 +9,7 @@ sudo git clone https://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@github.com/OzPoz
 cd /opt/bynet_installer
 pip install -r /opt/bynet_installer/src/requirements.txt
 pip3 install -r /opt/bynet_installer/src/requirements.txt
+sudo chmod a+rw /opt/bynet_installer/src/.env
 sudo chmod a+x /opt/bynet_installer/src/which_cloud.sh
 /opt/bynet_installer/src/which_cloud.sh
 python /opt/bynet_installer/src/aws_info.py
