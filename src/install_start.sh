@@ -3,8 +3,8 @@
 # Check if gedit is running
 # -x flag only match processes whose name (or command line if -f is
 # specified) exactly match the pattern. 
-
-if pgrep -x "app.py" > /dev/null
+source /opt/bynet_installer/bin/activate
+if pgrep -x "python" > /dev/null
 then
     echo "Running"
     exit 0
@@ -23,7 +23,7 @@ else
       python $directory_path/app.py &
     fi
 fi
-if pgrep -x "app.py" > /dev/null
+if pgrep -x "python" > /dev/null
 then
     echo "Running"
     exit 0
