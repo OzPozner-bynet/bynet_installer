@@ -2,6 +2,6 @@
 Description=Bynet Installer
 After=network.target
 [Service]
-ExecStart=/opt/bynet_installer/install_start.sh
+ExecStart=/opt/bynet_installer/src/install_start.sh
 [Install]
 WantedBy=default.target
