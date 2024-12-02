@@ -5,3 +5,4 @@ docker-compose.yaml
 #/src/.env
 rsa_id
 installations/
+.venv/
