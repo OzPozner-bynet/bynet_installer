@@ -23,7 +23,7 @@ sudo pip install virtualenv
 cd /opt
 sudo git clone https://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@github.com/OzPozner-bynet/bynet_installer.git
 sudo virtualenv /opt/bynet_installer
-source /opt/bynet_installer/bin/activate
+source /opt/bynet_installer/.venv/bin/activate
 cd /opt/bynet_installer
 pip install -r /opt/bynet_installer/src/requirements.txt
 #pip3 install -r /opt/bynet_installer/src/requirements.txt

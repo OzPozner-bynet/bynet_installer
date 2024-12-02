@@ -8,24 +8,25 @@ from dotenv import load_dotenv
 def get_packages():
   try:
     load_dotenv()
-    api_key = os.getenv("API_KEY")
-    aws_account_id = os.getenv("AWS_ACCOUNT_ID")
+    api_key = os.getenv("API_KEY") or  "123"
+    aws_account_id = os.getenv("AWS_ACCOUNT_ID") or "umbrella"
     snow_url = os.getenv("SNOW_URL")
     url = f"{snow_url if snow_url else 'https://bynetprod.service-now.com/api/x_bdml_nimbus/v1/nimbus_api/'}get_packages"
     # Set headers with your API key
     headers = {"x_api_key": api_key, "Accept" : "application/json"}
     # Set parameters
-    params = {"aws_account_id": aws_account_id}
+    params = {"aws_account_id": aws_account_id, "cloud_provider": "GCP"}
 
     # Send GET request with headers and parameters
     response = requests.get(url, headers=headers, params=params)
-
+    
     # Check for successful response
     if response.status_code == 200:
       # Parse JSON response
       data = json.loads(response.text)
       #print(data)
       packages = data['result']
+      print(f"repsone packages { packages} \n params: \n {params}")
     else:
       print("Error:", response.status_code)
       print("Error Message: ", response.text)

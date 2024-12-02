@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 import secrets, datetime, pytz, requests, logging
 import dotenv, os, json 
 from dotenv import load_dotenv, dotenv_values
+import boto3  # Import boto3 for AWS interaction (optional)
+import requests
 
 # Internal modules
 import list_packages, downloader
@@ -15,6 +17,31 @@ TEMPLATES_FOLDER = "../templates"
 EXPOSED_PORT = 8080
 HOST = "0.0.0.0"
 
+# Load environment variables from .env
+def load_env():
+    try:
+        with open('/opt/bynet_installer/src/.env') as f:
+	        for line in f:
+	            key, value = line.strip().split('=')
+	            os.environ[key] = value
+	            #print(line)
+    except FileNotFoundError as e:
+        print(f"Error: .env file not found: {e}")
+
+load_env()
+
+# Function to detect cloud provider (modify based on your logic)
+def get_cloud_provider():
+    if 'PROJECT_ID' in os.environ:
+        return 'GCP'
+    elif 'PROJECT ID' in os.environ:
+        return 'GCP'
+    elif 'GCP_PROJECT_ID' in os.environ:
+        return 'GCP'
+    elif 'AWS_ACCESS_KEY_ID' in os.environ:
+        return 'AWS'
+    else:
+        return 'Unknown'
 
 # Time zone configuration
 tz = pytz.timezone("Asia/Jerusalem")
@@ -68,6 +95,26 @@ def details():
              - POST: new client record has been inserted into package_installer database.
     """
 
+    if cloud_provider == "AWS":
+        if "EC2_INSTANCE_ID" not in dotenv_values():
+            token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
+            ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
+        else:
+            ec2_instance_id = os.getenv("EC2_INSTANCE_ID")
+            print(f"AWS Instance ID (from .env): {ec2_instance_id}")
+        if "EC2_INSTANCE_ID" not in dotenv_values():
+            token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
+            ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
+            inJSONtext= requests.get("http://169.254.169.254/latest/dynamic/instance-identity/document", headers={"X-aws-ec2-metadata-token": token}).text
+            inJSON = json.loads(inJSONtext)
+            aws_account_id = inJSON["accountId"]
+        else:
+            aws_account_id = os.getenv("AWS_ACCOUNT_ID")
+            print(f"AWS Account ID (from .env): {aws_account_id}")
+    if cloud_provider == "GCP":
+        ec2_instance_id = instance_id
+        aws_account_id = gcp_account_id
+
     if request.method == "POST":
         try:
             # Retreive form data
@@ -80,27 +127,8 @@ def details():
             package = request.form["package-select"]
 
             # Retreive EC2 instance ID
-            load_dotenv()
-          
-
-            if "EC2_INSTANCE_ID" not in dotenv_values():
-                token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
-                ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
-            else:
-                ec2_instance_id = os.getenv("EC2_INSTANCE_ID")
-                print(f"AWS Instance ID (from .env): {ec2_instance_id}")
-            if "EC2_INSTANCE_ID" not in dotenv_values():
-                token = requests.put("http://169.254.169.254/latest/api/token", headers={"X-aws-ec2-metadata-token-ttl-seconds": "21600"}).text
-                ec2_instance_id = requests.get("http://169.254.169.254/latest/meta-data/instance-id", headers={"X-aws-ec2-metadata-token": token}).text
-                inJSONtext= requests.get("http://169.254.169.254/latest/dynamic/instance-identity/document", headers={"X-aws-ec2-metadata-token": token}).text
-                inJSON = json.loads(inJSONtext)
-                aws_account_id = inJSON["accountId"]
-            else:
-                aws_account_id = os.getenv("AWS_ACCOUNT_ID")
-                print(f"AWS Account ID (from .env): {aws_account_id}")
-
-            # Send a POST request to Bynet 
-            api_key = os.getenv("API_KEY")    
+            # Send a POST request to Bynet
+            api_key = api_key or os.getenv("API_KEY") 
             url = "https://bynetprod.service-now.com/api/x_bdml_nimbus/v1/nimbus_api/new_lic"
             headers = {"Content-Type": "application/json", "Accept": "application/json", "x_api_key": api_key, "Accept" : "application/json"}
             record = {
@@ -111,10 +139,16 @@ def details():
                 "email": str(email),
                 "phone_number": str(phone_number),
                 "_package_name": str(package),
+                "cloud_provider": cloud_provider,
                 "aws_account_id": str(aws_account_id),
-                "instance_id": str(ec2_instance_id)
+                "instance_id": str(ec2_instance_id),
+                "instance_name" : instance_name,
+                "zone" :zone, 
+                "machine_type" : machine_type, 
+                "project_id" : project_id
             }
 
+            create_log(headers, "INFO")
             create_log(record, "INFO")
             response = requests.post(url, headers=headers, json=record).text
             licInJSON = json.loads(response)
@@ -129,13 +163,48 @@ def details():
 
     if request.method == "GET":
         packages = list(list_packages.get_packages().keys())
-        return render_template("details.html", packages=packages)
+        return render_template("details.html", packages = packages, account = aws_account_id , cloud_provider = cloud_provider, machine = machine_type, zone = zone, project = project_id, instance_id = instance_id, instance_name = instance_name)
 
 
 if __name__ == "__main__":
-    
-    if "BYNET_INSTALLER_DEBUG" not in dotenv_values():
-        debugFlask = True
+    load_env()
+    load_dotenv()
+
+
+    try:
+        api_key = api_key or "123"
+    except NameError:
+        print("api_key is not defined")
+        api_key = "123"
+    print(f"Api key = {api_key}")
+    cloud_provider = get_cloud_provider()
+    print(f"Cloud Provider:{cloud_provider}")
+    if cloud_provider == 'GCP':
+        instance_id = os.environ['INSTANCE_ID']
+        instance_name = os.environ['INSTANCE_NAME']
+        zone = os.environ['ZONE']
+        machine_type = os.environ['MACHINE_TYPE']
+        project_id = os.environ['PROJECT_ID']
+        gcp_account_id = os.environ['GCP_ACCOUNT_ID']
+    elif cloud_provider == 'AWS':
+        # Use boto3 to fetch AWS instance information (example)
+        ec2 = boto3.client('ec2')
+        instance = ec2.describe_instances(InstanceIds=[os.environ['INSTANCE_ID']])['Reservations'][0]['Instances'][0]
+        instance_id = instance['InstanceId']
+        instance_name = instance.get('Tags', [])[0].get('Value', 'Unknown')  # Get name from tag (optional)
+        zone = instance['Placement']['AvailabilityZone']
+        machine_type = instance['InstanceType']
+        project_id = 'N/A'  # AWS doesn't have a direct project concept
+        gcp_account_id = 'N/A'  # Not applicable for AWS
     else:
-        debugFlask = os.getenv("BYNET_INSTALLER_DEBUG")    
+        instance_id = 'Unknown'
+        instance_name = 'Unknown'
+        zone = 'Unknown'
+        machine_type = 'Unknown'
+        project_id = 'Unknown'
+        gcp_account_id = 'Unknown'
+    if "BYNET_INSTALLER_DEBUG" not in dotenv_values():
+        debugFlask = False
+    else:
+        debugFlask = os.getenv("BYNET_INSTALLER_DEBUG")
     app.run(host=HOST, port=EXPOSED_PORT, debug=debugFlask)
