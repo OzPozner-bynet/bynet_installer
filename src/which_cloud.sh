@@ -7,6 +7,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "Running on Google Cloud Platform (GCP)"
         # Install google module
         pip3 install google-auth google-auth-httplib2 google-auth-oauthlib
+        pip install google-cloud
         export cloud_provider="GCP"
     elif grep -q "Amazon" /sys/class/dmi/id/sys_vendor; then
         echo "Running on Amazon Web Services (AWS)"

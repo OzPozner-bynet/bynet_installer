@@ -52,6 +52,31 @@
                     {% endfor %}
                 </select></td>
             </tr>
+
+            <tr>
+                <td><label class="font-italic h4">Cloud Provider</label></td>
+                <td>{{ cloud_provider }}</td>
+	    </tr>
+            <tr>
+                <td><label class="font-italic h4">Account ID</label></td>
+                <td>{{ account }}</td>
+	    </tr>
+            <tr>
+                <td><label class="font-italic h4">Machine Type</label></td>
+                <td>{{ machine }}</td>
+	    </tr>
+            <tr>
+                <td><label class="font-italic h4">Instance Name</label></td>
+                <td>{{ instance_name }}</td>
+	    </tr>
+            <tr>
+                <td><label class="font-italic h4">Instance ID</label></td>
+                <td>[{{zone}}] {{ instance_id }}</td>
+	    </tr>
+            <tr>
+                <td><label class="font-italic h4">Project ID</label></td>
+                <td>{{ project }}</td>
+	    </tr>
             <tr>
                 <td colspan="2" class="text-right">
                     <input type="submit" name="Submit" value="Submit" class="btn btn-outline-danger float-left mr-3 btn-block">
