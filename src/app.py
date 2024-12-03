@@ -32,8 +32,8 @@ load_env()
 
 # Function to detect cloud provider (modify based on your logic)
 def get_cloud_provider():
-    if 'PROJECT_ID' in os.environ:
-        return 'GCP'
+    if 'CLOUD_PROVIDER' in os.environ:
+        return os.environ['CLOUD_PROVIDER']
     elif 'PROJECT ID' in os.environ:
         return 'GCP'
     elif 'GCP_PROJECT_ID' in os.environ:
